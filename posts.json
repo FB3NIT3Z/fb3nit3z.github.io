@@ -1,11 +1,12 @@
 [
   {
-    "id": "LOG_004",
+    "id": "kimi-vs-claude-2026",
     "date": "2026-07-28",
     "tag": "video",
     "type": "video",
-    "title": "Título del video pendiente",
-    "excerpt": "Reemplaza este texto con un resumen corto de qué trata el video, en tus palabras.",
+    "title": " Kimi vs Claude",
+    "hashtags": ["ClaudeAI", "InteligenciaArtificial", "KimiK26"],
+    "excerpt": "Esta comparación evalúa los enfoques de Kimi y Claude según sus fortalezas clave:\n\n• Claude (Razonamiento complejo): Ideal para planificar, estructurar la mejor solución y realizar análisis donde la precisión es crítica.\n  - Sonnet: Redactar, resumir y correos.\n  - Opus 4.8: Razonamiento profundo, código difícil y análisis.\n  - Fable 5: Lo más potente.\n  - Haiku 4.5: Preguntas simples, tareas repetitivas y respuestas rápidas.\n\n• Kimi (Eficiencia y costos): Orientado a frontend, interfaces, componentes, agentes y generación constante de código con velocidad y control de costos.\n  - Ventajas clave: Consume menos tokens e integra un sistema de caché que reduce costos en tareas repetitivas o agentes. Usa arquitectura Mixture of Experts y soporta Agent Swarm para coordinar múltiples agentes en paralelo.\n  - Kimi K2.6: Diseñado para ejecutar tareas largas o repetitivas con menos coste.",
     "youtubeId": "C7T9nF6WJts"
   },
   {
