@@ -1,0 +1,166 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Validador de posts.json — Fredy Benitez</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;600;700&family=Space+Grotesk:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+  :root{ --bg:#0B0F17; --panel:#141C2B; --line:#26334A; --ink:#E7ECF3; --dim:#8A97AC; --signal:#FF7A45; --data:#3ED6B5; --bad:#FF5D5D;
+    --mono:'JetBrains Mono', ui-monospace, monospace; --grot:'Space Grotesk', sans-serif; }
+  *{box-sizing:border-box;}
+  body{margin:0; background:var(--bg); color:var(--ink); font-family:var(--grot); padding:40px 20px 80px;}
+  .wrap{max-width:680px; margin:0 auto;}
+  a.back{font-family:var(--mono); font-size:12.5px; color:var(--dim); text-decoration:none;}
+  a.back:hover{color:var(--data);}
+  h1{font-size:24px; margin:6px 0 6px;}
+  p.sub{color:var(--dim); font-size:14px; margin-top:0; margin-bottom:26px;}
+  textarea{
+    width:100%; min-height:280px; background:var(--panel); border:1px solid var(--line); color:var(--ink);
+    padding:14px 16px; border-radius:6px; font-family:var(--mono); font-size:13px; outline:none; resize:vertical; line-height:1.5;
+  }
+  textarea:focus{border-color:var(--data);}
+  button{
+    margin-top:16px; background:var(--signal); border:none; color:#1a0d05; font-family:var(--mono);
+    font-weight:700; font-size:14px; padding:13px 22px; border-radius:6px; cursor:pointer;
+  }
+  button:hover{background:#ff8f63;}
+  button.secondary{background:transparent; border:1px solid var(--line); color:var(--ink); margin-left:10px;}
+  button.secondary:hover{border-color:var(--data); color:var(--data); background:transparent;}
+  .result{margin-top:24px; display:none;}
+  .result.show{display:block;}
+  .status{
+    font-family:var(--mono); font-size:14px; font-weight:700; padding:14px 16px; border-radius:6px; margin-bottom:14px;
+    display:flex; align-items:center; gap:10px;
+  }
+  .status.ok{background:rgba(62,214,181,0.12); border:1px solid var(--data); color:var(--data);}
+  .status.err{background:rgba(255,93,93,0.1); border:1px solid var(--bad); color:var(--bad);}
+  .detail{font-family:var(--mono); font-size:12.5px; color:var(--dim); background:var(--panel); border:1px solid var(--line); border-radius:6px; padding:14px 16px; white-space:pre-wrap; word-break:break-word;}
+  .checklist{margin-top:16px; font-family:var(--mono); font-size:12.5px; color:var(--dim);}
+  .checklist .item{padding:6px 0; display:flex; gap:8px; align-items:flex-start;}
+  .checklist .ok-icon{color:var(--data);}
+  .checklist .warn-icon{color:var(--signal);}
+  .summary{margin-top:14px; font-family:var(--mono); font-size:12.5px; color:var(--dim);}
+</style>
+</head>
+<body>
+<div class="wrap">
+  <a href="index.html" class="back">← volver al sitio</a> · <a href="generador.html" class="back">generador de posts →</a>
+  <h1>Validador de posts.json</h1>
+  <p class="sub">Pega aquí el contenido completo de tu posts.json (todo el archivo, con corchetes incluidos) y revisa si está bien formado antes de subirlo a GitHub.</p>
+
+  <textarea id="jsonInput" placeholder='[
+  {
+    "id": "LOG_001",
+    "date": "2026-07-28",
+    ...
+  }
+]'></textarea>
+
+  <div>
+    <button onclick="validate()">Validar</button>
+    <button class="secondary" onclick="clearAll()">Limpiar</button>
+  </div>
+
+  <div class="result" id="result">
+    <div class="status" id="status"></div>
+    <div class="detail" id="detail" style="display:none;"></div>
+    <div class="checklist" id="checklist"></div>
+    <div class="summary" id="summary"></div>
+  </div>
+</div>
+
+<script>
+  function clearAll(){
+    document.getElementById('jsonInput').value = '';
+    document.getElementById('result').classList.remove('show');
+  }
+
+  function locateError(text, message){
+    // Extrae la posición del error si el mensaje de JSON.parse la incluye
+    const match = message.match(/position (\d+)/);
+    if(!match) return null;
+    const pos = parseInt(match[1], 10);
+    const before = text.slice(0, pos);
+    const line = before.split('\n').length;
+    const col = pos - before.lastIndexOf('\n');
+    const snippetStart = Math.max(0, pos - 40);
+    const snippetEnd = Math.min(text.length, pos + 40);
+    const snippet = text.slice(snippetStart, pos) + ' ⟵ AQUÍ ⟶ ' + text.slice(pos, snippetEnd);
+    return {line, col, snippet};
+  }
+
+  function validate(){
+    const raw = document.getElementById('jsonInput').value;
+    const resultBox = document.getElementById('result');
+    const statusBox = document.getElementById('status');
+    const detailBox = document.getElementById('detail');
+    const checklistBox = document.getElementById('checklist');
+    const summaryBox = document.getElementById('summary');
+    resultBox.classList.add('show');
+    checklistBox.innerHTML = '';
+    summaryBox.textContent = '';
+
+    if(!raw.trim()){
+      statusBox.className = 'status err';
+      statusBox.textContent = '⚠ Pega el contenido de posts.json arriba primero.';
+      detailBox.style.display = 'none';
+      return;
+    }
+
+    let data;
+    try{
+      data = JSON.parse(raw);
+    } catch(e){
+      statusBox.className = 'status err';
+      statusBox.textContent = '✕ El JSON tiene un error de sintaxis';
+      const loc = locateError(raw, e.message);
+      detailBox.style.display = 'block';
+      detailBox.textContent = loc
+        ? `Error cerca de la línea ${loc.line}, columna ${loc.col}:\n\n...${loc.snippet}...\n\nMensaje técnico: ${e.message}`
+        : `Mensaje técnico: ${e.message}`;
+      return;
+    }
+
+    detailBox.style.display = 'none';
+
+    if(!Array.isArray(data)){
+      statusBox.className = 'status err';
+      statusBox.textContent = '✕ El contenido es JSON válido, pero debe ser una lista [ ] de posts, no un objeto suelto.';
+      return;
+    }
+
+    // Validaciones de estructura por post
+    const required = ['id','date','tag','type','title','excerpt'];
+    const warnings = [];
+    const ids = new Set();
+    data.forEach((post, i)=>{
+      const label = post.id || `post #${i+1}`;
+      required.forEach(f=>{
+        if(post[f]===undefined || post[f]==='') warnings.push(`"${label}" — falta el campo "${f}"`);
+      });
+      if(post.type==='video' && !post.youtubeId) warnings.push(`"${label}" — es tipo video pero no tiene "youtubeId"`);
+      if(post.type==='text' && !post.link && !post.content) warnings.push(`"${label}" — es tipo texto pero no tiene "link" ni "content"`);
+      if(post.date && !/^\d{4}-\d{2}-\d{2}$/.test(post.date)) warnings.push(`"${label}" — la fecha "${post.date}" no tiene el formato AAAA-MM-DD`);
+      if(post.id){
+        if(ids.has(post.id)) warnings.push(`"${post.id}" — hay un ID duplicado`);
+        ids.add(post.id);
+      }
+    });
+
+    statusBox.className = 'status ok';
+    statusBox.textContent = `✓ El JSON es válido — ${data.length} post(s) encontrados`;
+
+    if(warnings.length){
+      checklistBox.innerHTML = '<div style="color:var(--signal); margin-bottom:6px;">Revisa esto antes de publicar:</div>' +
+        warnings.map(w=>`<div class="item"><span class="warn-icon">⚠</span> ${w}</div>`).join('');
+    } else {
+      checklistBox.innerHTML = '<div class="item"><span class="ok-icon">✓</span> Todos los posts tienen los campos necesarios.</div>';
+    }
+
+    summaryBox.textContent = `Listo para pegar en GitHub. Recuerda: el JSON completo debe empezar con [ y terminar con ], sin coma después del último post.`;
+  }
+</script>
+</body>
+</html>
