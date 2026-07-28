@@ -258,12 +258,20 @@
   function cardHTML(post){
     const meta = `<div class="log-meta"><span class="id">${post.id}</span><span>${fmtDate(post.date)}</span><span class="tag">${post.tag}</span></div>`;
     if(post.type === 'video'){
+     const hasContent = post.content && post.content.length;
+     const titleHTML = hasContent 
+       ? `<h3><a href="#" class="open-modal" data-id="${post.id}">${post.title}</a></h3>`
+       : `<h3>${post.title}</h3>`;
+      const readBtn = hasContent 
+        ? `<a class="read open-modal" href="#" data-id="${post.id}">Leer notas completas →</a>`
+        : '';
       return `<article class="log-card" data-tag="${post.tag}" data-search="${(post.title+' '+post.excerpt).toLowerCase()}">
         ${meta}
-        <h3>${post.title}</h3>
-        <div class="video-frame"><iframe src="https://www.youtube.com/embed/${post.youtubeId}" title="${post.title}" allowfullscreen loading="lazy"></iframe></div>
-        <p>${post.excerpt}</p>
-      </article>`;
+        ${titleHTML}
+       <div class="video-frame"><iframe src="https://www.youtube.com/embed/${post.youtubeId}" title="${post.title}" allowfullscreen loading="lazy"></iframe></div>
+       <p>${post.excerpt}</p>
+       ${readBtn}
+  </article>`;
     }
     if(post.content && post.content.length){
       return `<article class="log-card" data-tag="${post.tag}" data-search="${(post.title+' '+post.excerpt).toLowerCase()}">
