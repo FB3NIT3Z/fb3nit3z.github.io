@@ -255,6 +255,14 @@
     });
   }
 
+  function parseMarkdown(text){
+    return text
+      .replace(/\*\*(.*?)\*\*/g, '<strong>$1</strong>')
+      .replace(/__(.*?)__/g, '<strong>$1</strong>')
+      .replace(/\*(.*?)\*/g, '<em>$1</em>')
+      .replace(/_(.*?)_/g, '<em>$1</em>');
+  }
+
   function cardHTML(post){
     const meta = `<div class="log-meta"><span class="id">${post.id}</span><span>${fmtDate(post.date)}</span><span class="tag">${post.tag}</span></div>`;
     if(post.type === 'video'){
@@ -291,7 +299,7 @@
 
   function openModal(post){
     const meta = `<div class="log-meta"><span class="id">${post.id}</span><span>${fmtDate(post.date)}</span><span class="tag">${post.tag}</span></div>`;
-    const paras = post.content.map(p=>`<p>${p}</p>`).join('');
+    const paras = post.content.map(p=>`<p>${parseMarkdown(p)}</p>`).join('');
     const refs = post.references && post.references.length
       ? `<div class="refs">Fuentes: ${post.references.map(r=>`<a href="${r.url}" target="_blank" rel="noopener">${r.label}</a>`).join(' · ')}</div>`
       : '';
