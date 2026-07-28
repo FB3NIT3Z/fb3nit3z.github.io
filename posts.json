@@ -1,0 +1,49 @@
+[
+  {
+    "id": "LOG_004",
+    "date": "2026-07-28",
+    "tag": "video",
+    "type": "video",
+    "title": "Título del video pendiente",
+    "excerpt": "Reemplaza este texto con un resumen corto de qué trata el video, en tus palabras.",
+    "youtubeId": "C7T9nF6WJts"
+  },
+  {
+    "id": "LOG_003",
+    "date": "2026-07-28",
+    "tag": "infraestructura",
+    "type": "text",
+    "title": "Cómo estoy evaluando el auge de la IA aplicada a DevOps",
+    "excerpt": "Un repaso de las herramientas que están automatizando pipelines, observabilidad y respuesta a incidentes — y en qué casos todavía prefiero hacerlo a mano.",
+    "link": "#"
+  },
+  {
+    "id": "LOG_002",
+    "date": "2026-06-14",
+    "tag": "seguridad",
+    "type": "text",
+    "title": "Notas rápidas sobre autenticación sin contraseña",
+    "excerpt": "Passkeys, MFA adaptativo y por qué la mayoría de equipos migran más lento de lo que deberían.",
+    "link": "#"
+  },
+  {
+    "id": "LOG_001",
+    "date": "2026-07-28",
+    "tag": "reflexión",
+    "type": "text",
+    "title": "Vida electrónica, revisada: qué dicen las cifras de 2026 sobre nuestra dependencia digital",
+    "excerpt": "Reescribí mi primer post de 2020 con datos actuales: cuánto tiempo pasamos hoy en redes, qué edades están más enganchadas, y por qué el diseño del algoritmo — no la fuerza de voluntad — explica buena parte del problema.",
+    "content": [
+      "En abril de 2020 escribí una reflexión corta sobre cómo el celular y las redes sociales habían tomado nuestra rutina diaria. Seis años después, la pregunta sigue siendo válida, pero las cifras cambiaron bastante — y como ingeniero, esta vez quiero mirarlas con un poco más de rigor.",
+      "Hoy hay cerca de 5.790 millones de personas usando redes sociales en el mundo, casi el 70% de toda la población viva. La persona promedio le dedica alrededor de 2 horas y 21 minutos al día, repartidos entre unas 6.5 plataformas distintas al mes. La cifra ha bajado levemente frente a 2024, lo cual sugiere que el crecimiento ya no viene de que usemos más tiempo, sino de que se suman más usuarios nuevos — sobre todo en Asia y África.",
+      "Donde sí sigue creciendo el uso es en los más jóvenes. Los usuarios de 16 a 24 años superan las 3 horas diarias, muy por encima del promedio general. Y dentro de ese grupo hay una brecha de género notable: las adolescentes reportan un promedio de 5.3 horas diarias frente a 4.4 horas en los adolescentes hombres.",
+      "La parte que más me interesa como ingeniero de sistemas es el diseño detrás de ese enganche. No es casualidad ni falta de disciplina: los usuarios de TikTok abren la aplicación un promedio de 52 veces al día, y el sistema de notificaciones de Facebook está calibrado para generar una respuesta cada 6.5 minutos aproximadamente. El autoplay de YouTube empuja el consumo compulsivo en un 68% de los usuarios frecuentes, y la naturaleza visual de Instagram dispara comparación social en el 73% de sus usuarios. Estos no son efectos secundarios accidentales del producto: son el resultado esperado de optimizar un algoritmo para una sola métrica — tiempo en pantalla.",
+      "En 2020 cerraba preguntando qué podíamos hacer distinto. Hoy la respuesta técnica es más clara: el problema no se resuelve solo con fuerza de voluntad individual, porque estamos compitiendo contra sistemas diseñados por equipos enteros de ingeniería para maximizar retención. Entender cómo funciona ese diseño — y por qué cifras como estas suben o bajan — sigue siendo, para mí, el primer paso para decidir con más criterio cuánto espacio le damos a estas plataformas en la vida diaria."
+    ],
+    "references": [
+      { "label": "DataReportal — Digital 2026 Mid-Year Update", "url": "https://voxbooster.com/es/blog/social-media-statistics-2026/" },
+      { "label": "Estadísticas de adicción a redes sociales 2026", "url": "https://affinco.com/es/social-media-addiction-statistics/" },
+      { "label": "Jóvenes en redes sociales 2026", "url": "https://100seguidores.com/blog/jovenes-en-redes-sociales-estadisticas-clave/" }
+    ]
+  }
+]

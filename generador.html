@@ -1,0 +1,149 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Generador de posts — Fredy Benitez</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;600;700&family=Space+Grotesk:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+  :root{ --bg:#0B0F17; --panel:#141C2B; --line:#26334A; --ink:#E7ECF3; --dim:#8A97AC; --signal:#FF7A45; --data:#3ED6B5;
+    --mono:'JetBrains Mono', ui-monospace, monospace; --grot:'Space Grotesk', sans-serif; }
+  *{box-sizing:border-box;}
+  body{margin:0; background:var(--bg); color:var(--ink); font-family:var(--grot); padding:40px 20px 80px;}
+  .wrap{max-width:640px; margin:0 auto;}
+  h1{font-size:24px; margin-bottom:6px;}
+  p.sub{color:var(--dim); font-size:14px; margin-top:0; margin-bottom:30px;}
+  .back{font-family:var(--mono); font-size:12.5px; color:var(--dim); text-decoration:none;}
+  .back:hover{color:var(--data);}
+  label{display:block; font-family:var(--mono); font-size:12px; color:var(--dim); text-transform:uppercase; letter-spacing:0.05em; margin:18px 0 6px;}
+  input, textarea, select{
+    width:100%; background:var(--panel); border:1px solid var(--line); color:var(--ink);
+    padding:11px 13px; border-radius:6px; font-family:var(--grot); font-size:15px; outline:none;
+  }
+  input:focus, textarea:focus, select:focus{border-color:var(--data);}
+  textarea{resize:vertical; min-height:80px;}
+  .row{display:flex; gap:14px;}
+  .row > div{flex:1;}
+  button{
+    margin-top:26px; width:100%; background:var(--signal); border:none; color:#1a0d05;
+    font-family:var(--mono); font-weight:700; font-size:14px; padding:14px; border-radius:6px; cursor:pointer;
+  }
+  button:hover{background:#ff8f63;}
+  #videoFields{display:none;}
+  .output{margin-top:30px;}
+  .output-box{
+    background:var(--panel); border:1px solid var(--line); border-radius:6px; padding:16px;
+    font-family:var(--mono); font-size:12.5px; color:var(--data); white-space:pre-wrap; word-break:break-word;
+  }
+  .copy-btn{margin-top:10px; background:transparent; border:1px solid var(--line); color:var(--ink); font-family:var(--mono); font-size:12.5px; padding:9px 16px; border-radius:6px; width:auto; cursor:pointer;}
+  .copy-btn:hover{border-color:var(--data); color:var(--data); background:transparent;}
+  .steps{margin-top:36px; background:var(--panel); border:1px dashed var(--line); border-radius:8px; padding:18px 20px; font-size:14px; color:#C5CCDA;}
+  .steps ol{margin:8px 0 0; padding-left:20px;}
+  .steps li{margin-bottom:8px;}
+  code{background:#0F1522; padding:2px 6px; border-radius:4px; font-family:var(--mono); font-size:12.5px;}
+</style>
+</head>
+<body>
+<div class="wrap">
+  <a href="index.html" class="back">← volver al sitio</a>
+  <h1>Generador de posts</h1>
+  <p class="sub">Llena el formulario y copia el bloque generado dentro de <code>posts.json</code>.</p>
+
+  <label>Tipo de entrada</label>
+  <select id="type">
+    <option value="text">Texto</option>
+    <option value="video">Video de YouTube</option>
+  </select>
+
+  <div class="row">
+    <div>
+      <label>ID (consecutivo)</label>
+      <input id="id" placeholder="LOG_005">
+    </div>
+    <div>
+      <label>Fecha</label>
+      <input id="date" type="date">
+    </div>
+  </div>
+
+  <label>Tema / etiqueta</label>
+  <input id="tag" placeholder="infraestructura, seguridad, ia, reflexión...">
+
+  <label>Título</label>
+  <input id="title" placeholder="Título de la entrada">
+
+  <label>Resumen corto</label>
+  <textarea id="excerpt" placeholder="2-3 líneas describiendo de qué trata"></textarea>
+
+  <div id="textFields">
+    <label>Enlace (si el post completo vive en otro lado, o # si no aplica)</label>
+    <input id="link" placeholder="https:// o #">
+  </div>
+
+  <div id="videoFields">
+    <label>ID del video de YouTube</label>
+    <input id="youtubeId" placeholder="Ej: en youtube.com/watch?v=ABC123, el ID es ABC123">
+  </div>
+
+  <button onclick="generate()">Generar bloque JSON</button>
+
+  <div class="output" id="output" style="display:none;">
+    <label>Copia esto y pégalo dentro del array en posts.json</label>
+    <div class="output-box" id="outputBox"></div>
+    <button class="copy-btn" onclick="copyOutput()">Copiar</button>
+  </div>
+
+  <div class="steps">
+    <strong>Cómo publicarlo (2 minutos):</strong>
+    <ol>
+      <li>Genera el bloque arriba y cópialo.</li>
+      <li>Entra a tu repo en GitHub → abre <code>posts.json</code> → clic en el ícono de lápiz (editar).</li>
+      <li>Pega el bloque nuevo dentro de los corchetes <code>[ ]</code>, justo al inicio, seguido de una coma.</li>
+      <li>Clic en "Commit changes". El sitio se actualiza solo en 1-2 minutos.</li>
+    </ol>
+  </div>
+</div>
+
+<script>
+  document.getElementById('type').addEventListener('change', (e)=>{
+    document.getElementById('textFields').style.display = e.target.value==='text' ? 'block':'none';
+    document.getElementById('videoFields').style.display = e.target.value==='video' ? 'block':'none';
+  });
+
+  function esc(s){ return (s||'').replace(/\\/g,'\\\\').replace(/"/g,'\\"'); }
+
+  function generate(){
+    const type = document.getElementById('type').value;
+    const id = document.getElementById('id').value || 'LOG_00X';
+    const date = document.getElementById('date').value || new Date().toISOString().slice(0,10);
+    const tag = document.getElementById('tag').value || 'general';
+    const title = document.getElementById('title').value || 'Título pendiente';
+    const excerpt = document.getElementById('excerpt').value || '';
+
+    let obj;
+    if(type==='video'){
+      const yid = document.getElementById('youtubeId').value || 'ID_DEL_VIDEO';
+      obj = {id, date, tag, type:'video', title, excerpt, youtubeId: yid};
+    } else {
+      const link = document.getElementById('link').value || '#';
+      obj = {id, date, tag, type:'text', title, excerpt, link};
+    }
+
+    const json = JSON.stringify(obj, null, 2) + ',';
+    document.getElementById('outputBox').textContent = json;
+    document.getElementById('output').style.display = 'block';
+  }
+
+  function copyOutput(){
+    const text = document.getElementById('outputBox').textContent;
+    navigator.clipboard.writeText(text).then(()=>{
+      const btn = document.querySelector('.copy-btn');
+      const original = btn.textContent;
+      btn.textContent = '¡Copiado!';
+      setTimeout(()=>btn.textContent = original, 1500);
+    });
+  }
+</script>
+</body>
+</html>

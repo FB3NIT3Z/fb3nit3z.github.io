@@ -1,0 +1,367 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Fredy Benitez — Ingeniería &amp; Tendencias Tecnológicas</title>
+<meta name="description" content="Bitácora técnica de Fredy Benitez, ingeniero de sistemas. Tendencias en software, infraestructura y tecnología.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;600;700;800&family=Space+Grotesk:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --bg:#0B0F17; --panel:#141C2B; --line:#26334A; --ink:#E7ECF3; --dim:#8A97AC;
+    --signal:#FF7A45; --data:#3ED6B5; --mono:'JetBrains Mono', ui-monospace, monospace; --grot:'Space Grotesk', sans-serif;
+  }
+  *{box-sizing:border-box;}
+  html{scroll-behavior:smooth;}
+  body{margin:0; background:var(--bg); color:var(--ink); font-family:var(--grot); font-size:17px; line-height:1.6; position:relative; overflow-x:hidden;}
+  a{color:var(--data);}
+  a:focus-visible, button:focus-visible, input:focus-visible{outline:2px solid var(--signal); outline-offset:3px;}
+  .wrap{max-width:980px; margin:0 auto; padding:0 28px; position:relative; z-index:2;}
+  #netbg{position:fixed; inset:0; z-index:0; opacity:0.5;}
+
+  header.site{position:sticky; top:0; z-index:20; background:rgba(11,15,23,0.85); backdrop-filter:blur(10px); border-bottom:1px solid var(--line);}
+  .nav{display:flex; align-items:center; justify-content:space-between; padding:16px 0;}
+  .brand{font-family:var(--mono); font-weight:700; font-size:14px; letter-spacing:0.08em; color:var(--ink); text-decoration:none; display:flex; align-items:center; gap:10px;}
+  .brand .mark{width:10px;height:10px;background:var(--signal); box-shadow:0 0 10px var(--signal); flex:none;}
+  nav.links{display:flex; gap:26px; font-family:var(--mono); font-size:12.5px;}
+  nav.links a{text-decoration:none; color:var(--dim); letter-spacing:0.03em;}
+  nav.links a:hover{color:var(--data);}
+
+  .hero{padding:80px 0 50px;}
+  .status-line{font-family:var(--mono); font-size:12.5px; color:var(--dim); display:flex; align-items:center; gap:8px; margin-bottom:20px;}
+  .status-line .dot{width:7px;height:7px;border-radius:50%;background:var(--signal); animation:pulse 2.2s ease-in-out infinite;}
+  @media (prefers-reduced-motion: reduce){ .status-line .dot{animation:none;} }
+  @keyframes pulse{0%,100%{opacity:1;} 50%{opacity:0.45;}}
+  h1.headline{font-family:var(--grot); font-weight:700; font-size:clamp(30px,5vw,46px); line-height:1.15; margin:0 0 18px; max-width:16ch;}
+  h1.headline .accent{color:var(--signal);}
+  .hero p.lede{font-size:18px; max-width:56ch; color:var(--dim); margin:0 0 20px;}
+
+  /* search + filters */
+  .controls{display:flex; gap:12px; flex-wrap:wrap; align-items:center; margin-top:36px;}
+  .search-box{
+    flex:1; min-width:220px; display:flex; align-items:center; gap:10px;
+    background:var(--panel); border:1px solid var(--line); border-radius:6px; padding:10px 14px;
+  }
+  .search-box input{
+    background:transparent; border:none; outline:none; color:var(--ink); font-family:var(--grot);
+    font-size:14px; width:100%;
+  }
+  .search-box input::placeholder{color:var(--dim);}
+  .search-box svg{flex:none;}
+  .filters{display:flex; gap:8px; flex-wrap:wrap;}
+  .filter-btn{font-family:var(--mono); font-size:12px; background:transparent; color:var(--dim); border:1px solid var(--line); padding:9px 14px; border-radius:20px; cursor:pointer; transition:all .15s; white-space:nowrap;}
+  .filter-btn:hover{border-color:var(--data); color:var(--data);}
+  .filter-btn.active{background:var(--data); border-color:var(--data); color:#06231c; font-weight:600;}
+
+  .section-head{display:flex; align-items:baseline; gap:14px; margin:0 0 26px;}
+  .section-head .idx{font-family:var(--mono); color:var(--signal); font-size:13px;}
+  .section-head h2{font-family:var(--mono); text-transform:uppercase; font-size:15px; letter-spacing:0.14em; font-weight:600; margin:0;}
+  .section-head::after{content:''; flex:1; height:1px; background:var(--line);}
+  section{padding-bottom:64px; position:relative;}
+
+  .logs{display:grid; gap:18px;}
+  .log-card{background:var(--panel); border:1px solid var(--line); border-radius:8px; padding:24px 26px; transition:transform .18s, border-color .18s, box-shadow .18s;}
+  .log-card:hover{transform:translateY(-3px); border-color:var(--data); box-shadow:0 16px 40px -20px rgba(62,214,181,0.25);}
+  .log-card.hidden{display:none;}
+  .log-meta{display:flex; gap:14px; align-items:center; margin-bottom:12px; font-family:var(--mono); font-size:12px; color:var(--dim); flex-wrap:wrap;}
+  .log-meta .id{color:var(--signal); font-weight:700;}
+  .log-meta .tag{border:1px solid var(--line); color:var(--data); padding:3px 9px; border-radius:12px;}
+  .log-card h3{margin:0 0 10px; font-weight:600; font-size:21px;}
+  .log-card h3 a{color:var(--ink); text-decoration:none;}
+  .log-card h3 a:hover{color:var(--data);}
+  .log-card p{margin:0 0 14px; color:#B7C0D1;}
+  .log-card .read{font-family:var(--mono); font-size:12.5px; text-decoration:none; color:var(--signal);}
+  .video-frame{position:relative; width:100%; padding-top:56.25%; margin-bottom:14px; border-radius:6px; overflow:hidden; border:1px solid var(--line); background:#000;}
+  .video-frame iframe{position:absolute; inset:0; width:100%; height:100%; border:0;}
+  .empty-state{font-family:var(--mono); color:var(--dim); font-size:14px; padding:30px 0; text-align:center;}
+
+  .about-grid{display:grid; grid-template-columns:130px 1fr; gap:30px; align-items:start;}
+  .about-grid .photo{width:130px; height:130px; border:1px solid var(--line); border-radius:8px; background:var(--panel); display:flex; align-items:center; justify-content:center; font-family:var(--mono); color:var(--dim); font-size:11px; text-align:center; overflow:hidden;}
+  .about-copy .role{font-family:var(--mono); font-size:12.5px; color:var(--signal); margin-bottom:10px;}
+  .about-copy p{margin:0 0 14px; color:#C5CCDA;}
+
+  .res-grid{display:grid; grid-template-columns:repeat(auto-fit,minmax(220px,1fr)); gap:14px;}
+  .res-card{background:var(--panel); border:1px solid var(--line); border-radius:8px; padding:20px 22px;}
+  .res-card .cat{font-family:var(--mono); font-size:11.5px; color:var(--data); text-transform:uppercase; letter-spacing:0.08em; margin-bottom:12px;}
+  .res-card ul{list-style:none; margin:0; padding:0;}
+  .res-card li{margin-bottom:9px;}
+  .res-card a{text-decoration:none; font-size:15px; color:var(--ink);}
+  .res-card a:hover{color:var(--data);}
+
+  .admin-note{background:var(--panel); border:1px dashed var(--line); border-radius:8px; padding:18px 22px; font-family:var(--mono); font-size:12.5px; color:var(--dim); margin-top:36px;}
+  .admin-note a{color:var(--signal);}
+
+  footer{border-top:1px solid var(--line); padding:34px 0 44px; font-family:var(--mono); font-size:12.5px; color:var(--dim);}
+  footer .foot-row{display:flex; justify-content:space-between; flex-wrap:wrap; gap:14px;}
+  footer a{color:var(--dim); text-decoration:none;}
+  footer a:hover{color:var(--data);}
+
+  @media (max-width:640px){ .about-grid{grid-template-columns:1fr;} .about-grid .photo{width:88px;height:88px;} }
+
+  /* ---------- Modal de lectura completa ---------- */
+  .modal-overlay{
+    position:fixed; inset:0; background:rgba(6,9,15,0.82); backdrop-filter:blur(4px);
+    z-index:50; display:none; align-items:flex-start; justify-content:center;
+    padding:60px 20px; overflow-y:auto;
+  }
+  .modal-overlay.open{display:flex;}
+  .modal-box{
+    background:var(--panel); border:1px solid var(--line); border-radius:10px;
+    max-width:680px; width:100%; padding:34px 36px 40px; position:relative;
+  }
+  .modal-close{
+    position:absolute; top:18px; right:18px; background:transparent; border:1px solid var(--line);
+    color:var(--dim); width:32px; height:32px; border-radius:50%; cursor:pointer; font-family:var(--mono);
+    font-size:16px; line-height:1;
+  }
+  .modal-close:hover{border-color:var(--signal); color:var(--signal);}
+  .modal-box .log-meta{margin-bottom:16px;}
+  .modal-box h2.mtitle{font-size:26px; margin:0 0 20px; line-height:1.25;}
+  .modal-body p{color:#C5CCDA; margin:0 0 16px; font-size:16px; line-height:1.7;}
+  .modal-body .refs{margin-top:28px; padding-top:18px; border-top:1px solid var(--line); font-family:var(--mono); font-size:12px; color:var(--dim);}
+  .modal-body .refs a{color:var(--dim);}
+  .modal-body .refs a:hover{color:var(--data);}
+</style>
+</head>
+<body>
+
+<canvas id="netbg"></canvas>
+
+<header class="site">
+  <div class="wrap nav">
+    <a href="#top" class="brand"><span class="mark"></span>FREDY BENITEZ</a>
+    <nav class="links">
+      <a href="#logs">Bitácora</a>
+      <a href="#about">Sobre mí</a>
+      <a href="#resources">Recursos</a>
+      <a href="https://github.com/FB3NIT3Z" target="_blank" rel="noopener">GitHub</a>
+    </nav>
+  </div>
+</header>
+
+<main id="top">
+  <div class="wrap">
+
+    <section class="hero">
+      <div class="status-line"><span class="dot"></span> ingeniero de sistemas · Bogotá, CO · bitácora activa</div>
+      <h1 class="headline">Notas y videos sobre <span class="accent">tendencias tecnológicas</span></h1>
+      <p class="lede">Bitácora personal donde documento lo que pruebo y aprendo en software, infraestructura y ciberseguridad — en texto o en video.</p>
+
+      <div class="controls">
+        <div class="search-box">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#8A97AC" stroke-width="2"><circle cx="11" cy="11" r="7"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
+          <input id="searchInput" type="text" placeholder="Buscar en la bitácora...">
+        </div>
+      </div>
+      <div class="filters" id="filterBar" style="margin-top:12px;"></div>
+    </section>
+
+    <section id="logs">
+      <div class="section-head"><span class="idx">01</span><h2>Bitácora</h2></div>
+      <div class="logs" id="logsGrid">
+        <div class="empty-state">Cargando entradas...</div>
+      </div>
+    </section>
+
+    <section id="about">
+      <div class="section-head"><span class="idx">02</span><h2>Sobre mí</h2></div>
+      <div class="about-grid">
+        <div class="photo">FOTO<br>DE PERFIL</div>
+        <div class="about-copy">
+          <div class="role">Ingeniero de Sistemas</div>
+          <p>Soy Fredy Benitez, ingeniero de sistemas con interés en infraestructura, buenas prácticas de desarrollo y las tendencias que van moldeando la industria del software.</p>
+          <p>Este espacio nació como un blog personal en 2020 y hoy lo retomo como una bitácora técnica en texto y video.</p>
+        </div>
+      </div>
+    </section>
+
+    <section id="resources">
+      <div class="section-head"><span class="idx">03</span><h2>Recursos</h2></div>
+      <div class="res-grid">
+        <div class="res-card">
+          <div class="cat">Medios &amp; revistas</div>
+          <ul>
+            <li><a href="https://www.enter.co/" target="_blank" rel="noopener">Revista Enter</a></li>
+            <li><a href="https://www.science.org/" target="_blank" rel="noopener">Science</a></li>
+            <li><a href="https://sea-technology.com/" target="_blank" rel="noopener">Sea Technology</a></li>
+          </ul>
+        </div>
+        <div class="res-card">
+          <div class="cat">Charlas</div>
+          <ul><li><a href="https://www.ted.com/talks" target="_blank" rel="noopener">TED Talks</a></li></ul>
+        </div>
+        <div class="res-card">
+          <div class="cat">Cursos</div>
+          <ul><li><a href="https://www.udemy.com/" target="_blank" rel="noopener">Udemy</a></li></ul>
+        </div>
+      </div>
+
+      <div class="admin-note">
+        ¿Vas a publicar algo nuevo? Usa <a href="generador.html">generador.html</a> para armar el bloque del post o video, pégalo en <code>posts.json</code>, sube el cambio a GitHub — el sitio se actualiza solo.
+      </div>
+    </section>
+
+  </div>
+</main>
+
+<div class="modal-overlay" id="modalOverlay">
+  <div class="modal-box">
+    <button class="modal-close" id="modalClose" aria-label="Cerrar">✕</button>
+    <div id="modalContent"></div>
+  </div>
+</div>
+
+<footer>
+  <div class="wrap foot-row">
+    <span>© 2026 Fredy Benitez — alojado en GitHub Pages.</span>
+    <span><a href="https://github.com/FB3NIT3Z" target="_blank" rel="noopener">github.com/FB3NIT3Z</a></span>
+  </div>
+</footer>
+
+<script>
+  const reduceMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+  let allPosts = [];
+  let activeTag = 'all';
+
+  function fmtDate(iso){
+    const d = new Date(iso+'T00:00:00');
+    return d.toLocaleDateString('es-CO', {day:'2-digit', month:'short', year:'numeric'});
+  }
+
+  function renderFilters(posts){
+    const tags = ['all', ...new Set(posts.map(p=>p.tag))];
+    const bar = document.getElementById('filterBar');
+    bar.innerHTML = '';
+    tags.forEach(tag=>{
+      const btn = document.createElement('button');
+      btn.className = 'filter-btn' + (tag==='all' ? ' active' : '');
+      btn.textContent = tag==='all' ? 'Todas' : tag.charAt(0).toUpperCase()+tag.slice(1);
+      btn.dataset.tag = tag;
+      btn.addEventListener('click', ()=>{
+        activeTag = tag;
+        document.querySelectorAll('.filter-btn').forEach(b=>b.classList.remove('active'));
+        btn.classList.add('active');
+        applyFilters();
+      });
+      bar.appendChild(btn);
+    });
+  }
+
+  function cardHTML(post){
+    const meta = `<div class="log-meta"><span class="id">${post.id}</span><span>${fmtDate(post.date)}</span><span class="tag">${post.tag}</span></div>`;
+    if(post.type === 'video'){
+      return `<article class="log-card" data-tag="${post.tag}" data-search="${(post.title+' '+post.excerpt).toLowerCase()}">
+        ${meta}
+        <h3>${post.title}</h3>
+        <div class="video-frame"><iframe src="https://www.youtube.com/embed/${post.youtubeId}" title="${post.title}" allowfullscreen loading="lazy"></iframe></div>
+        <p>${post.excerpt}</p>
+      </article>`;
+    }
+    if(post.content && post.content.length){
+      return `<article class="log-card" data-tag="${post.tag}" data-search="${(post.title+' '+post.excerpt).toLowerCase()}">
+        ${meta}
+        <h3><a href="#" class="open-modal" data-id="${post.id}">${post.title}</a></h3>
+        <p>${post.excerpt}</p>
+        <a class="read open-modal" href="#" data-id="${post.id}">Leer entrada completa →</a>
+      </article>`;
+    }
+    return `<article class="log-card" data-tag="${post.tag}" data-search="${(post.title+' '+post.excerpt).toLowerCase()}">
+      ${meta}
+      <h3><a href="${post.link}" target="_blank" rel="noopener">${post.title}</a></h3>
+      <p>${post.excerpt}</p>
+      <a class="read" href="${post.link}" target="_blank" rel="noopener">Leer entrada →</a>
+    </article>`;
+  }
+
+  function openModal(post){
+    const meta = `<div class="log-meta"><span class="id">${post.id}</span><span>${fmtDate(post.date)}</span><span class="tag">${post.tag}</span></div>`;
+    const paras = post.content.map(p=>`<p>${p}</p>`).join('');
+    const refs = post.references && post.references.length
+      ? `<div class="refs">Fuentes: ${post.references.map(r=>`<a href="${r.url}" target="_blank" rel="noopener">${r.label}</a>`).join(' · ')}</div>`
+      : '';
+    document.getElementById('modalContent').innerHTML = `${meta}<h2 class="mtitle">${post.title}</h2><div class="modal-body">${paras}${refs}</div>`;
+    document.getElementById('modalOverlay').classList.add('open');
+    document.body.style.overflow = 'hidden';
+  }
+  function closeModal(){
+    document.getElementById('modalOverlay').classList.remove('open');
+    document.body.style.overflow = '';
+  }
+  document.getElementById('modalClose').addEventListener('click', closeModal);
+  document.getElementById('modalOverlay').addEventListener('click', (e)=>{ if(e.target.id==='modalOverlay') closeModal(); });
+  document.addEventListener('keydown', (e)=>{ if(e.key==='Escape') closeModal(); });
+  document.getElementById('logsGrid').addEventListener('click', (e)=>{
+    const trigger = e.target.closest('.open-modal');
+    if(!trigger) return;
+    e.preventDefault();
+    const post = allPosts.find(p=>p.id===trigger.dataset.id);
+    if(post) openModal(post);
+  });
+
+  function applyFilters(){
+    const q = document.getElementById('searchInput').value.trim().toLowerCase();
+    const grid = document.getElementById('logsGrid');
+    const cards = grid.querySelectorAll('.log-card');
+    let visible = 0;
+    cards.forEach(c=>{
+      const matchesTag = activeTag==='all' || c.dataset.tag===activeTag;
+      const matchesSearch = !q || c.dataset.search.includes(q);
+      const show = matchesTag && matchesSearch;
+      c.classList.toggle('hidden', !show);
+      if(show) visible++;
+    });
+    let empty = grid.querySelector('.empty-state');
+    if(visible===0){
+      if(!empty){
+        empty = document.createElement('div');
+        empty.className='empty-state';
+        empty.textContent='No hay entradas que coincidan con tu búsqueda.';
+        grid.appendChild(empty);
+      }
+    } else if(empty){
+      empty.remove();
+    }
+  }
+
+  fetch('posts.json')
+    .then(r=>r.json())
+    .then(posts=>{
+      allPosts = posts.sort((a,b)=> new Date(b.date) - new Date(a.date));
+      const grid = document.getElementById('logsGrid');
+      grid.innerHTML = allPosts.map(cardHTML).join('');
+      renderFilters(allPosts);
+    })
+    .catch(()=>{
+      document.getElementById('logsGrid').innerHTML = '<div class="empty-state">No se pudo cargar posts.json. Si estás abriendo el archivo localmente (file://), súbelo a GitHub Pages para que funcione — los navegadores bloquean fetch() de archivos locales.</div>';
+    });
+
+  document.getElementById('searchInput').addEventListener('input', applyFilters);
+
+  // network background
+  const canvas = document.getElementById('netbg');
+  const ctx = canvas.getContext('2d');
+  let w,h,nodes;
+  function resize(){ w = canvas.width = window.innerWidth; h = canvas.height = window.innerHeight; }
+  function initNodes(){
+    const count = Math.max(24, Math.floor((w*h)/45000));
+    nodes = Array.from({length:count}, ()=>({x:Math.random()*w, y:Math.random()*h, vx:(Math.random()-0.5)*0.25, vy:(Math.random()-0.5)*0.25}));
+  }
+  function step(){
+    ctx.clearRect(0,0,w,h);
+    nodes.forEach(n=>{ n.x+=n.vx; n.y+=n.vy; if(n.x<0||n.x>w) n.vx*=-1; if(n.y<0||n.y>h) n.vy*=-1; });
+    for(let i=0;i<nodes.length;i++) for(let j=i+1;j<nodes.length;j++){
+      const a=nodes[i], b=nodes[j]; const d=Math.hypot(a.x-b.x,a.y-b.y);
+      if(d<130){ ctx.strokeStyle=`rgba(62,214,181,${(1-d/130)*0.18})`; ctx.lineWidth=1; ctx.beginPath(); ctx.moveTo(a.x,a.y); ctx.lineTo(b.x,b.y); ctx.stroke(); }
+    }
+    nodes.forEach(n=>{ ctx.fillStyle='rgba(255,122,69,0.55)'; ctx.beginPath(); ctx.arc(n.x,n.y,1.6,0,Math.PI*2); ctx.fill(); });
+    if(!reduceMotion) requestAnimationFrame(step);
+  }
+  resize(); initNodes();
+  if(!reduceMotion){ requestAnimationFrame(step); } else { step(); }
+  window.addEventListener('resize', ()=>{ resize(); initNodes(); });
+</script>
+
+</body>
+</html>
