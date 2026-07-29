@@ -92,6 +92,9 @@
   <label>URL de imagen (opcional)</label>
   <input id="image" placeholder="https://... (déjalo vacío si no aplica)">
 
+  <label>Fuentes / referencias (opcional)</label>
+  <textarea id="references" placeholder="Una fuente por línea, formato: Texto del enlace | https://url-de-la-fuente.com" style="min-height:100px;"></textarea>
+
   <button onclick="generate()">Generar bloque JSON</button>
 
   <div class="output" id="output" style="display:none;">
@@ -139,16 +142,34 @@
 
     const image = document.getElementById('image').value.trim();
 
+    // Fuentes opcionales: una por línea, formato "Etiqueta | URL".
+    // Se ignoran las líneas vacías o que no traigan el separador "|".
+    const referencesRaw = document.getElementById('references').value.trim();
+    const references = referencesRaw
+      ? referencesRaw.split(/\r?\n/)
+          .map(line => line.trim())
+          .filter(Boolean)
+          .map(line => {
+            const parts = line.split('|');
+            const label = (parts[0] || '').trim();
+            const url = (parts[1] || '').trim();
+            return (label && url) ? { label, url } : null;
+          })
+          .filter(Boolean)
+      : null;
+
     let obj;
     if(type==='video'){
       const yid = document.getElementById('youtubeId').value || 'ID_DEL_VIDEO';
       obj = {id, date, tag, type:'video', title, excerpt};
       if(content) obj.content = content;
+      if(references && references.length) obj.references = references;
       obj.youtubeId = yid;
     } else {
       const link = document.getElementById('link').value || '#';
       obj = {id, date, tag, type:'text', title, excerpt};
       if(content) obj.content = content;
+      if(references && references.length) obj.references = references;
       obj.link = link;
     }
     if(image) obj.image = image;
