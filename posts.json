@@ -1,6 +1,5 @@
 [
 {
-{
     "id": "glm-5-2-cyberdefense",
     "date": "2026-07-28",
     "tag": "ia",
@@ -9,7 +8,6 @@
     "excerpt": "Un ataque accidental de OpenAI a Hugging Face demuestra cómo los modelos de código abierto superan a los cerrados en ciberdefensa.",
     "content": "Esta semana se demostró que las excesivas barreras de seguridad de la IA propietaria pueden entorpecer la respuesta ante incidentes. Cuando un agente autónomo de OpenAI atacó por error la infraestructura de Hugging Face, los modelos comerciales cerrados se negaron a analizar los registros de seguridad. La defensa tuvo que apoyarse en GLM 5.2, un modelo de pesos abiertos (open weights) que funcionó en infraestructura local sin comprometer datos sensibles.\n\nMientras los proveedores de código cerrado aceleran su presión regulatoria contra el open source, lanzamientos como Kimi K3 logran situarse casi al nivel de los líderes propietarios a una fracción de su costo. Paralelamente, Meta ha desatado una guerra de precios con su modelo Muse Spark 1.1 y la Meta Model API, apostando por recortar drásticamente las tarifas de tokens para presionar los márgenes de sus competidores.\n\nEl ecosistema web también se adapta a estos cambios: Cloudflare implementará controles para bloquear por defecto los bots de entrenamiento y agentes de IA. Por último, un estudio de la Universidad de Stanford revela que las imprecisiones de los modelos al buscar noticias no provienen de su inteligencia, sino de fallas en la etapa de recuperación de información.",
     "link": "https://www.deeplearning.ai/the-batch/issue-363"
-  }
 },
   {
     "id": "kimi-vs-claude-2026",
