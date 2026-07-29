@@ -31,6 +31,10 @@
       "• **Ventajas clave:** Consume menos tokens e integra un sistema de caché que reduce costos en tareas repetitivas o agentes. Usa arquitectura Mixture of Experts y soporta Agent Swarm para coordinar múltiples agentes en paralelo.",
       "• **Kimi K2.6:** Diseñado para ejecutar tareas largas o repetitivas con menos coste."
     ],
+    "references": [
+      { "label": "YouTube — @viviwsd", "url": "https://www.youtube.com/@viviwsd" },
+      { "label": "Instagram — @viviexecs", "url": "https://www.instagram.com/viviexecs/" }
+    ],
     "youtubeId": "C7T9nF6WJts"
   },
   {
