@@ -74,7 +74,10 @@
   <input id="title" placeholder="Título de la entrada">
 
   <label>Resumen corto</label>
-  <textarea id="excerpt" placeholder="2-3 líneas describiendo de qué trata"></textarea>
+  <textarea id="excerpt" placeholder="2-3 líneas describiendo de qué trata (se guardará como una sola línea)"></textarea>
+
+  <label>Contenido completo (opcional)</label>
+  <textarea id="content" placeholder="Texto completo de la entrada. Deja una línea en blanco entre párrafos." style="min-height:160px;"></textarea>
 
   <div id="textFields">
     <label>Enlace (si el post completo vive en otro lado, o # si no aplica)</label>
@@ -122,17 +125,31 @@
     const date = document.getElementById('date').value || new Date().toISOString().slice(0,10);
     const tag = document.getElementById('tag').value || 'general';
     const title = document.getElementById('title').value || 'Título pendiente';
-    const excerpt = document.getElementById('excerpt').value || '';
+
+    // El resumen se guarda como una sola línea, sin saltos de línea.
+    const excerptRaw = document.getElementById('excerpt').value || '';
+    const excerpt = excerptRaw.replace(/\r?\n+/g, ' ').replace(/[ \t]{2,}/g, ' ').trim();
+
+    // El contenido completo se guarda como array de párrafos (uno por bloque separado por línea en blanco),
+    // igual al formato que ya usa posts.json para las entradas con lectura completa.
+    const contentRaw = document.getElementById('content').value.trim();
+    const content = contentRaw
+      ? contentRaw.split(/\r?\n\s*\r?\n/).map(p=>p.trim()).filter(Boolean)
+      : null;
 
     const image = document.getElementById('image').value.trim();
 
     let obj;
     if(type==='video'){
       const yid = document.getElementById('youtubeId').value || 'ID_DEL_VIDEO';
-      obj = {id, date, tag, type:'video', title, excerpt, youtubeId: yid};
+      obj = {id, date, tag, type:'video', title, excerpt};
+      if(content) obj.content = content;
+      obj.youtubeId = yid;
     } else {
       const link = document.getElementById('link').value || '#';
-      obj = {id, date, tag, type:'text', title, excerpt, link};
+      obj = {id, date, tag, type:'text', title, excerpt};
+      if(content) obj.content = content;
+      obj.link = link;
     }
     if(image) obj.image = image;
 
