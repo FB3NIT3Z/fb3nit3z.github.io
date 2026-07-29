@@ -1,4 +1,14 @@
 [
+{
+  "id": "glm-5-2-cyberdefense",
+  "date": "2026-07-28",
+  "tag": "ia",
+  "type": "text",
+  "title": "El mito del modelo cerrado",
+  "excerpt": "El mito del modelo cerrado: Esta semana se demostró que las excesivas barreras de seguridad de la IA propietaria pueden entorpecer la respuesta ante incidentes. Cuando un agente autónomo de OpenAI atacó por error la infraestructura de Hugging Face, los modelos comerciales cerrados se negaron a analizar los registros de seguridad. La defensa tuvo que apoyarse en GLM 5.2, un modelo de pesos abiertos (open weights) que funcionó en infraestructura local sin comprometer datos sensibles.\n\nLa batalla por la potencia y los costos: Mientras los proveedores de código cerrado aceleran su presión regulatoria contra el open source, lanzamientos como Kimi K3 (con 2.8 billones de parámetros) logran situarse casi al nivel de los líderes propietarios (como Claude Fable 5 y GPT-5.6 Sol) a una fracción de su costo. Paralelamente, Meta ha desatado una guerra de precios con su modelo Muse Spark 1.1 y la Meta Model API, apostando por recortar drásticamente las tarifas de tokens para presionar los márgenes de sus competidores.\n\nControl de datos y limitaciones de búsqueda: El ecosistema web también se adapta a estos cambios: Cloudflare implementará controles para bloquear por defecto los bots de entrenamiento y agentes de IA, permitiendo únicamente el rastreo para motores de búsqueda tradicionales o cobrando a los agentes por acceso. Por último, un estudio de la Universidad de Stanford revela que las imprecisiones de los modelos al buscar noticias no provienen de su \"inteligencia\", sino de fallas en la etapa de recuperación de información (especialmente en idiomas distintos al inglés).",
+  "link": "https://www.deeplearning.ai/the-batch/issue-363"
+},
+
   {
     "id": "kimi-vs-claude-2026",
     "date": "2026-07-28",
