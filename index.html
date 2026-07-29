@@ -75,6 +75,7 @@
   .log-card .read{font-family:var(--mono); font-size:12.5px; text-decoration:none; color:var(--signal);}
   .video-frame{position:relative; width:100%; padding-top:56.25%; margin-bottom:14px; border-radius:6px; overflow:hidden; border:1px solid var(--line); background:#000;}
   .video-frame iframe{position:absolute; inset:0; width:100%; height:100%; border:0;}
+  .card-image{width:100%; max-height:280px; object-fit:cover; margin-bottom:14px; border-radius:6px; border:1px solid var(--line); display:block;}
   .empty-state{font-family:var(--mono); color:var(--dim); font-size:14px; padding:30px 0; text-align:center;}
 
   .about-grid{display:grid; grid-template-columns:130px 1fr; gap:30px; align-items:start;}
@@ -265,17 +266,19 @@
 
   function cardHTML(post){
     const meta = `<div class="log-meta"><span class="id">${post.id}</span><span>${fmtDate(post.date)}</span><span class="tag">${post.tag}</span></div>`;
+    const imgHTML = post.image ? `<img class="card-image" src="${post.image}" alt="${post.title}" loading="lazy">` : '';
     if(post.type === 'video'){
      const hasContent = post.content && post.content.length;
-     const titleHTML = hasContent 
+     const titleHTML = hasContent
        ? `<h3><a href="#" class="open-modal" data-id="${post.id}">${post.title}</a></h3>`
        : `<h3>${post.title}</h3>`;
-      const readBtn = hasContent 
+      const readBtn = hasContent
         ? `<a class="read open-modal" href="#" data-id="${post.id}">Leer notas completas →</a>`
         : '';
       return `<article class="log-card" data-tag="${post.tag}" data-search="${(post.title+' '+post.excerpt).toLowerCase()}">
         ${meta}
         ${titleHTML}
+       ${imgHTML}
        <div class="video-frame"><iframe src="https://www.youtube.com/embed/${post.youtubeId}" title="${post.title}" allowfullscreen loading="lazy"></iframe></div>
        <p>${post.excerpt}</p>
        ${readBtn}
@@ -285,6 +288,7 @@
       return `<article class="log-card" data-tag="${post.tag}" data-search="${(post.title+' '+post.excerpt).toLowerCase()}">
         ${meta}
         <h3><a href="#" class="open-modal" data-id="${post.id}">${post.title}</a></h3>
+        ${imgHTML}
         <p>${post.excerpt}</p>
         <a class="read open-modal" href="#" data-id="${post.id}">Leer entrada completa →</a>
       </article>`;
@@ -292,14 +296,21 @@
     return `<article class="log-card" data-tag="${post.tag}" data-search="${(post.title+' '+post.excerpt).toLowerCase()}">
       ${meta}
       <h3><a href="${post.link}" target="_blank" rel="noopener">${post.title}</a></h3>
+      ${imgHTML}
       <p>${post.excerpt}</p>
       <a class="read" href="${post.link}" target="_blank" rel="noopener">Leer entrada →</a>
     </article>`;
   }
 
+  function contentParagraphs(content){
+    if(Array.isArray(content)) return content;
+    if(typeof content === 'string') return content.split(/\r?\n\s*\r?\n/).map(p=>p.trim()).filter(Boolean);
+    return [];
+  }
+
   function openModal(post){
     const meta = `<div class="log-meta"><span class="id">${post.id}</span><span>${fmtDate(post.date)}</span><span class="tag">${post.tag}</span></div>`;
-    const paras = post.content.map(p=>`<p>${parseMarkdown(p)}</p>`).join('');
+    const paras = contentParagraphs(post.content).map(p=>`<p>${parseMarkdown(p)}</p>`).join('');
     const refs = post.references && post.references.length
       ? `<div class="refs">Fuentes: ${post.references.map(r=>`<a href="${r.url}" target="_blank" rel="noopener">${r.label}</a>`).join(' · ')}</div>`
       : '';
